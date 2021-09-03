@@ -1,1 +1,72 @@
 
+{% assign link = false %}
+{% for t in product.tags %}
+{% if t contains 'link>' %}     
+{% assign link = true %}
+{% assign link_url = t | split: ">" | last  %}
+{% break %}		   
+{% endif %}
+{% endfor %}
+
+
+
+
+{% if link %}  
+<a id="ppbutton{{ product.id }}" 
+   class="ppbutton fa fa-play" 
+   data-src="{{ link_url }}"></a>
+{% endif %}
+
+
+
+
+
+    <script>
+      jQuery(document).ready(function() {
+        var clicked_id;
+        var audio_var = new Audio();
+
+
+        $('.ppbutton').on("click",function(){
+          var datasrc = $(this).attr('data-src');
+          clicked_id= $(this).attr('id');
+          console.log(clicked_id);
+          audio_var.pause();
+
+          $('.ppbutton').not(this).each(function(){
+            $(this).removeClass('fa-pause');
+            $(this).addClass('fa-play');
+          });
+
+          if($(this).hasClass('fa-play')){
+            console.log('play_click');
+            audio_var.src=datasrc;
+            $(this).removeClass('fa-play');
+            $(this).addClass('fa-pause');
+            console.log(audio_var);
+            audio_var.play();
+          } else {
+            console.log('pause_click');
+            $(this).removeClass('fa-pause');
+            $(this).addClass('fa-play');
+            console.log(audio_var);
+            audio_var.pause();
+            //audio_var.src='';
+            //audio_var.load();
+            console.log(audio_var);
+          }
+
+
+        });
+
+        audio_var.onended = function() {
+          $("#"+clicked_id).removeClass('fa-pause');
+          $("#"+clicked_id).addClass('fa-play');
+        };
+
+
+
+      });
+    </script>
+
+
